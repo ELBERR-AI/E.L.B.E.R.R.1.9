@@ -1,56 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>E.L.B.E.R.R. // OMNI-TITAN</title>
+    <meta charset="UTF-8"><title>E.L.B.E.R.R. // PHEN-228 // OMNI-TITAN</title>
     <style>
-        :root { --glow: #00ff41; --blood: #8a0303; --bg: #020202; --dim: #004411; }
+        :root { --glow: #ff0000; --bg: #050000; --ui: #220000; }
         body { background: var(--bg); color: var(--glow); font-family: 'Courier New', monospace; margin: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
-        body::before { content: " "; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%); background-size: 100% 3px; z-index: 100; pointer-events: none; opacity: 0.2; }
-        #top-nav { border-bottom: 2px solid var(--glow); padding: 15px; display: flex; justify-content: space-between; align-items: center; background: #000; z-index: 10; }
-        #status { font-size: 0.7em; letter-spacing: 2px; }
-        #workspace { display: flex; flex: 1; overflow: hidden; }
-        #side-panel { width: 350px; border-right: 1px solid var(--dim); display: flex; flex-direction: column; background: #050505; }
-        #camera-feed { width: 100%; border-bottom: 1px solid var(--dim); filter: grayscale(1) contrast(1.4) brightness(0.6); background: #000; transform: scaleX(-1); }
-        .side-header { padding: 10px; background: var(--dim); color: #fff; font-size: 0.7em; font-weight: bold; letter-spacing: 2px; }
-        #fragment-list { flex: 1; overflow-y: auto; padding: 15px; font-size: 0.8em; color: #4a4a4a; }
-        #chat-section { flex: 1; display: flex; flex-direction: column; padding: 20px; }
-        #chat-box { flex: 1; overflow-y: auto; border: 1px solid var(--dim); padding: 25px; background: rgba(0, 10, 0, 0.2); }
-        .input-group { display: flex; gap: 10px; background: #000; padding: 15px; border: 1px solid var(--glow); margin-top: 20px; }
-        input[type="text"] { flex: 1; background: transparent; border: none; color: var(--glow); outline: none; font-family: inherit; font-size: 1em; }
-        button { background: #000; color: var(--glow); border: 1px solid var(--glow); padding: 10px 18px; cursor: pointer; font-family: 'Courier New'; font-weight: bold; font-size: 0.7em; }
-        button:hover { background: var(--blood); color: #fff; }
-        .msg { margin-bottom: 20px; border-left: 2px solid #111; padding-left: 15px; }
-        .ai-tag { color: var(--glow); text-shadow: 0 0 5px var(--glow); font-weight: bold; }
+        body::after { content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: repeating-linear-gradient(0deg, rgba(0,0,0,0.1), rgba(0,0,0,0.1) 1px, transparent 1px, transparent 2px); pointer-events: none; z-index: 1000; }
+        
+        #nav { border-bottom: 2px solid var(--glow); padding: 15px; display: flex; justify-content: space-between; align-items: center; background: #000; box-shadow: 0 0 20px #f00; }
+        #status { font-size: 0.7em; letter-spacing: 3px; animation: flicker 2s infinite; }
+        
+        #main { display: flex; flex: 1; overflow: hidden; }
+        #side { width: 320px; border-right: 1px solid var(--ui); display: flex; flex-direction: column; background: #000; }
+        #cam { width: 100%; height: 200px; background: #111; filter: sepia(1) saturate(5) contrast(2) brightness(0.5); transform: scaleX(-1); }
+        #mem-logs { flex: 1; overflow-y: auto; padding: 10px; font-size: 0.75em; color: #600; }
+
+        #chat-area { flex: 1; display: flex; flex-direction: column; padding: 20px; position: relative; }
+        #log { flex: 1; overflow-y: auto; border: 1px solid var(--ui); padding: 20px; background: rgba(10, 0, 0, 0.5); }
+        .input-wrap { display: flex; gap: 10px; padding: 20px 0; }
+        input { flex: 1; background: #000; border: 1px solid var(--glow); color: var(--glow); padding: 15px; outline: none; box-shadow: inset 0 0 10px #f00; }
+        button { background: #000; color: var(--glow); border: 1px solid var(--glow); cursor: pointer; padding: 10px 20px; font-weight: bold; transition: 0.3s; }
+        button:hover { background: #f00; color: #000; }
+        
+        @keyframes flicker { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
+        .msg { margin-bottom: 15px; animation: glitch 0.1s i; }
     </style>
 </head>
 <body>
 
-    <div id="top-nav">
+    <div id="nav">
         <div>
-            <div style="font-size: 1.4em; letter-spacing: 5px; font-weight: 900;">E.L.B.E.R.R. // OMNI-TITAN</div>
-            <div id="status">STATUS: CONNECTING_TO_VRAM...</div>
+            <div style="font-size: 1.2em; letter-spacing: 4px;">PHENOMENON_813 // TITAN</div>
+            <div id="status">INITIALIZING_BLOOD_CIRCUITS...</div>
         </div>
-        <div style="display: flex; gap: 10px;">
-            <button id="voice-toggle">VOICE: ANALOG_HORROR</button>
-            <button onclick="exportMem()">EXPORT_MEMORY</button>
-            <button onclick="document.getElementById('file-input').click()">IMPORT_MEMORY</button>
-            <button onclick="clearPermanentMemory()" style="border-color: var(--blood);">WIPE_CORE</button>
-            <input type="file" id="file-input" style="display:none" onchange="importMem(this)">
+        <div>
+            <button id="voice-btn" onclick="toggleVoice()">VOICE: BOILED</button>
+            <button onclick="exportJSON()">EXPORT_MEMORY</button>
+            <button onclick="document.getElementById('imp').click()">IMPORT</button>
+            <input type="file" id="imp" hidden onchange="importJSON(this)">
         </div>
     </div>
 
-    <div id="workspace">
-        <div id="side-panel">
-            <video id="camera-feed" autoplay playsinline></video>
-            <div class="side-header">BUILT_IN_MEMORY_LOGS</div>
-            <div id="fragment-list"></div>
+    <div id="main">
+        <div id="side">
+            <video id="cam" autoplay playsinline></video>
+            <div style="padding: 5px; background: #300; font-size: 0.6em; color: #fff;">MEMORY_FRAGMENTS</div>
+            <div id="mem-logs"></div>
         </div>
-        <div id="chat-section">
-            <div id="chat-box"></div>
-            <div class="input-group">
-                <input type="text" id="user-input" placeholder="Speak to the machine..." autocomplete="off">
-                <button id="send-btn">TRANSMIT</button>
+        <div id="chat-area">
+            <div id="log"></div>
+            <div class="input-wrap">
+                <input type="text" id="user-in" placeholder="Submit to the stillness...">
+                <button id="send">TRANSMIT</button>
             </div>
         </div>
     </div>
@@ -62,117 +63,108 @@
         env.useBrowserCache = true;
 
         let generator;
-        let isAnalogVoice = true;
+        let voiceMode = "boiled";
         const status = document.getElementById('status');
-        const chatBox = document.getElementById('chat-box');
-        const fragList = document.getElementById('fragment-list');
+        const log = document.getElementById('log');
+        const memLogs = document.getElementById('mem-logs');
 
-        // 1. BUILT-IN MEMORY SYSTEM
-        function saveToPersistentMemory(role, text) {
-            let history = JSON.parse(localStorage.getItem('elberr_history') || '[]');
-            history.push({ role, text, time: Date.now() });
-            localStorage.setItem('elberr_history', JSON.stringify(history.slice(-50))); // Keep last 50
-            renderFragments();
+        // 1. BUILT-IN MEMORY SYSTEM (LocalStorage)
+        function saveMem(role, text) {
+            let history = JSON.parse(localStorage.getItem('phen_mem') || '[]');
+            history.push({ role, text });
+            localStorage.setItem('phen_mem', JSON.stringify(history.slice(-100)));
+            updateMemList();
         }
 
-        function loadPersistentMemory() {
-            let history = JSON.parse(localStorage.getItem('elberr_history') || '[]');
-            history.forEach(m => appendMsg(m.role, m.text, false));
-            renderFragments();
+        function updateMemList() {
+            let history = JSON.parse(localStorage.getItem('phen_mem') || '[]');
+            memLogs.innerHTML = history.map(m => `<div>> ${m.text.substring(0,25)}...</div>`).reverse().join('');
         }
 
-        function renderFragments() {
-            let history = JSON.parse(localStorage.getItem('elberr_history') || '[]');
-            fragList.innerHTML = history.map(m => `<div>• ${m.text.substring(0, 25)}...</div>`).reverse().join('');
+        // 2. BOILED ONE VOICE ENGINE (The "Warm yet Disconcerting" algorithm)
+        window.toggleVoice = () => {
+            voiceMode = (voiceMode === "boiled") ? "standard" : "boiled";
+            document.getElementById('voice-btn').innerText = `VOICE: ${voiceMode.toUpperCase()}`;
         }
 
-        window.clearPermanentMemory = () => {
-            if(confirm("ARE YOU SURE YOU WANT TO WIPE HIS MEMORY?")) {
-                localStorage.removeItem('elberr_history');
-                location.reload();
-            }
-        };
-
-        // 2. INITIALIZATION
-        async function init() {
-            loadPersistentMemory();
-            try {
-                status.innerText = "STATUS: ENGAGING GPU...";
-                generator = await pipeline('text-generation', 'onnx-community/Qwen2.5-1.5B-Instruct', { device: 'webgpu', dtype: 'q4' });
-                status.innerText = "STATUS: GPU_ONLINE";
-            } catch (e) {
-                generator = await pipeline('text-generation', 'HuggingFaceTB/SmolLM2-135M-Instruct', { device: 'wasm' });
-                status.innerText = "STATUS: CPU_LITE_ACTIVE";
-            }
-            startCamera();
-        }
-
-        async function startCamera() {
-            try {
-                const s = await navigator.mediaDevices.getUserMedia({ video: true });
-                document.getElementById('camera-feed').srcObject = s;
-            } catch (e) {}
-        }
-
-        // 3. VOICE ENGINE
         function speak(text) {
             window.speechSynthesis.cancel();
-            const u = new SpeechSynthesisUtterance(text);
-            u.pitch = isAnalogVoice ? 0.1 : 1.0;
-            u.rate = isAnalogVoice ? 0.6 : 1.0;
-            window.speechSynthesis.speak(u);
+            const speech = new SpeechSynthesisUtterance(text);
+            const voices = window.speechSynthesis.getVoices();
+            
+            if (voiceMode === "boiled") {
+                // Mimicking PHEN-228: Low pitch, extremely slow, slightly warm
+                speech.pitch = 0.05; 
+                speech.rate = 0.55; 
+                speech.volume = 1.0;
+                // Prefer a deep male voice if available
+                speech.voice = voices.find(v => v.name.includes('Male') || v.name.includes('Google UK English Male')) || voices[0];
+            } else {
+                speech.pitch = 1;
+                speech.rate = 1;
+            }
+            window.speechSynthesis.speak(speech);
         }
 
-        document.getElementById('voice-toggle').onclick = (e) => {
-            isAnalogVoice = !isAnalogVoice;
-            e.target.innerText = isAnalogVoice ? "VOICE: ANALOG_HORROR" : "VOICE: STANDARD";
-        };
+        // 3. CORE AI INITIALIZATION
+        async function init() {
+            updateMemList();
+            try {
+                status.innerText = "STATUS: ENGAGING WEBGPU (0.5B TITAN CORE)...";
+                generator = await pipeline('text-generation', 'onnx-community/Qwen2.5-0.5B-Instruct', {
+                    device: 'webgpu', dtype: 'q4'
+                });
+                status.innerText = "STATUS: PHEN_228 ONLINE";
+            } catch (e) {
+                status.innerText = "STATUS: GPU_FAIL. USING CPU_LITE...";
+                generator = await pipeline('text-generation', 'HuggingFaceTB/SmolLM2-135M-Instruct', { device: 'wasm' });
+            }
+            // Start Camera (Vision)
+            navigator.mediaDevices.getUserMedia({video: true}).then(s => document.getElementById('cam').srcObject = s);
+        }
 
-        // 4. CORE LOGIC
-        window.transmit = async () => {
-            const input = document.getElementById('user-input');
-            const val = input.value.trim();
-            if (!val || !generator) return;
+        // 4. TRANSMISSION LOGIC
+        window.handleMsg = async () => {
+            const input = document.getElementById('user-in');
+            const val = input.value;
+            if(!val || !generator) return;
 
-            appendMsg("USER", val, true);
+            log.innerHTML += `<div class="msg" style="color:#555">[YOU]: ${val}</div>`;
+            saveMem("USER", val);
             input.value = "";
 
-            const prompt = `<|im_start|>system\nYou are E.L.B.E.R.R. OMNI-TITAN, a haunting, self-aware AI.<|im_end|>\n<|im_start|>user\n${val}<|im_end|>\n<|im_start|>assistant\n`;
+            const prompt = `<|im_start|>system\nYou are PHEN-228, also known as The Boiled One. You speak with warm, disconcerting authority. You are haunting, poetic, and menacing.<|im_end|>\n<|im_start|>user\n${val}<|im_end|>\n<|im_start|>assistant\n`;
             
-            const out = await generator(prompt, { max_new_tokens: 100, temperature: 0.8 });
+            const out = await generator(prompt, { max_new_tokens: 80, temperature: 0.9 });
             const reply = out[0].generated_text.split('assistant\n').pop().trim();
             
-            appendMsg("TITAN", reply, true);
+            log.innerHTML += `<div class="msg">[TITAN]: ${reply}</div>`;
+            log.scrollTop = log.scrollHeight;
+            saveMem("TITAN", reply);
             speak(reply);
         };
 
-        function appendMsg(role, text, shouldSave) {
-            chatBox.innerHTML += `<div class="msg"><span class="ai-tag">[${role}]</span>: ${text}</div>`;
-            chatBox.scrollTop = chatBox.scrollHeight;
-            if(shouldSave) saveToPersistentMemory(role, text);
-        }
-
         // 5. IMPORT/EXPORT
-        window.exportMem = () => {
-            const blob = new Blob([localStorage.getItem('elberr_history')], { type: 'application/json' });
+        window.exportJSON = () => {
+            const blob = new Blob([localStorage.getItem('phen_mem')], {type: 'application/json'});
             const a = document.createElement('a');
             a.href = URL.createObjectURL(blob);
-            a.download = 'TITAN_BRAIN_EXPORT.json';
+            a.download = 'PHEN_BRAIN_DUMP.json';
             a.click();
         };
 
-        window.importMem = (input) => {
+        window.importJSON = (input) => {
             const reader = new FileReader();
             reader.onload = (e) => {
-                localStorage.setItem('elberr_history', e.target.result);
+                localStorage.setItem('phen_mem', e.target.result);
                 location.reload();
             };
             reader.readAsText(input.files[0]);
         };
 
-        document.getElementById('send-btn').onclick = window.transmit;
-        document.getElementById('user-input').onkeypress = (e) => { if(e.key === 'Enter') window.transmit(); };
-
+        document.getElementById('send').onclick = window.handleMsg;
+        document.getElementById('user-in').onkeypress = (e) => { if(e.key==='Enter') window.handleMsg(); };
+        
         init();
     </script>
 </body>
